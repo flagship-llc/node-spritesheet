@@ -5,30 +5,34 @@ class Style
   constructor: ( options ) ->
     @selector = options.selector
     @pixelRatio = options.pixelRatio || 1
-    
+
     @resolveImageSelector = options.resolveImageSelector if options.resolveImageSelector
 
   css: ( selector, attributes ) ->
     "#{ selector } {\n#{ @cssStyle( attributes ) };\n}\n"
-  
+
   cssStyle: ( attributes ) ->
     attributes.join ";\n"
-  
+
   cssComment: ( comment ) ->
     "/*\n#{ comment }\n*/"
-  
+
   resolveImageSelector: ( name ) ->
     name
-  
+
   generate: ( options ) ->
     { imagePath, relativeImagePath, images, pixelRatio, width, height } = options
     relativeImagePath = relativeImagePath.replace /(\\+)/g, "/"
     @pixelRatio = pixelRatio || 1
-  
+
     styles = [
       @css @selector, [
-        "  background: url( '#{ relativeImagePath }' ) no-repeat"
-        "  background-size: #{ width / pixelRatio }px #{ height / pixelRatio }px"
+        "  overflow: hidden"
+        "  position: relative"
+      ]
+      @css "#{@selector} img", [
+        "  display: block"
+        "  position: absolute"
       ]
     ]
 
@@ -46,26 +50,32 @@ class Style
         attr = [
           "  width: #{ image.cssw / pixelRatio }px"
           "  height: #{ image.cssh / pixelRatio }px"
-          "  background-position: #{positionX} #{positionY}"
         ]
 
+        imgAttr = [
+          "  left: #{positionX}"
+          "  top: #{positionY}"
+        ]
 
         image.style = @cssStyle attr
         image.selector = @resolveImageSelector( image.name, image.path )
 
-        styles.push @css( [ @selector, image.selector ].join( '.' ), attr )
-    
+        mainSelector = [ @selector, image.selector ].join( '.' )
+
+        styles.push @css( mainSelector, attr )
+        styles.push @css( "#{mainSelector} img", imgAttr )
+
     styles.push ""
     css = styles.join "\n"
-    
+
     if pixelRatio > 1
       css = @wrapMediaQuery( css )
-  
+
     return css
-  
+
   comment: ( comment ) ->
     @cssComment comment
-    
+
   wrapMediaQuery: ( css ) ->
     "@media (min--moz-device-pixel-ratio: #{ @pixelRatio }),\n
 (-o-min-device-pixel-ratio: #{ @pixelRatio }/1),\n
@@ -73,5 +83,5 @@ class Style
 (min-device-pixel-ratio: #{ @pixelRatio }) {\n
 #{ css }
 }\n"
-  
+
 module.exports = Style
