@@ -33,6 +33,8 @@ class Style
       @css "#{@selector} img", [
         "  display: block"
         "  position: absolute"
+        "  width: #{width}px"
+        "  height: #{height}px"
       ]
     ]
 
