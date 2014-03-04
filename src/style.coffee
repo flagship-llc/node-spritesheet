@@ -5,6 +5,7 @@ class Style
   constructor: ( options ) ->
     @selector = options.selector
     @pixelRatio = options.pixelRatio || 1
+    @forceRetina = options.forceRetina || false
 
     @resolveImageSelector = options.resolveImageSelector if options.resolveImageSelector
 
@@ -25,6 +26,15 @@ class Style
     relativeImagePath = relativeImagePath.replace /(\\+)/g, "/"
     @pixelRatio = pixelRatio || 1
 
+    logicalWidth = width
+    logicalHeight = height
+
+    if @forceRetina == true
+      pixelRatio = 2
+
+      logicalHeight = logicalHeight / pixelRatio
+      logicalWidth = logicalWidth / pixelRatio
+
     styles = [
       @css @selector, [
         "  overflow: hidden"
@@ -33,13 +43,12 @@ class Style
       @css "#{@selector} img", [
         "  display: block"
         "  position: absolute"
-        "  width: #{width}px"
-        "  height: #{height}px"
+        "  width: #{logicalWidth}px"
+        "  height: #{logicalHeight}px"
       ]
     ]
 
-    # Only add background-position, width and height for pixelRatio === 1.
-    if pixelRatio is 1
+    if pixelRatio is 1 or @forceRetina == true
       for image in images
         positionX = ( -image.cssx / pixelRatio )
         if positionX != 0
@@ -70,7 +79,7 @@ class Style
     styles.push ""
     css = styles.join "\n"
 
-    if pixelRatio > 1
+    if pixelRatio > 1 and !@forceRetina
       css = @wrapMediaQuery( css )
 
     return css

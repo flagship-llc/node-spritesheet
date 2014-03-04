@@ -3,7 +3,7 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         spritesheet: {
-            
+
             //
             // Simple example.
             //
@@ -11,13 +11,14 @@ module.exports = function(grunt) {
                 options: {
                     outputImage: 'sprite/img/flags.png',
                     outputCss: 'sprite/css/flags.css',
-                    selector: '.flag'
+                    selector: '.flag',
+                    forceRetina: true
                 },
                 files: {
                     'bin': 'src/img/flags/*'
                 }
             },
-            
+
             //
             // Complex example with multiple pixel ratios. Uses automatic
             // image resampling.
@@ -42,7 +43,7 @@ module.exports = function(grunt) {
                     'bin': 'src/img/flags-2x/*'
                 }
             },
-            
+
             //
             // Second multi-ratio example, but takes source images for both
             // pixel densities, i.e. doesn't resample the images from the
@@ -74,10 +75,10 @@ module.exports = function(grunt) {
                     'bin': 'src/img/**/*'
                 }
             }
-            
+
         }
     });
-    
+
     grunt.loadTasks('../tasks');
 
     grunt.registerTask('default', 'spritesheet');
