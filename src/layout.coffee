@@ -1,14 +1,14 @@
 class Layout
 
   layout: ( images, options = {} ) ->
-  
+
     return width: 0, height: 0 if !images || !images.length
-  
+
     hpadding = options.hpadding || 0
     vpadding = options.vpadding || 0
-    hmargin  = options.hmargin  || 0
-    vmargin  = options.vmargin  || 0
-  
+    hmargin  = options.hmargin  || 3
+    vmargin  = options.vmargin  || 3
+
     for i in images
       i.w = i.width  + ( 2 * hpadding ) + ( 2 * hmargin )
       i.h = i.height + ( 2 * vpadding ) + ( 2 * vmargin )
