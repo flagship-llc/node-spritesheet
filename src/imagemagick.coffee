@@ -38,7 +38,7 @@ class ImageMagick
     "
 
     @exec command, ( error, stdout, stderr ) =>
-      if error or stderr
+      if error
         throw "Error in creating canvas (#{ filepath }): #{ error || stderr }"
 
       compose = ( image, next ) =>
@@ -72,7 +72,7 @@ class ImageMagick
     "
 
     exec command, ( error, stdout, stderr ) ->
-      if error or stderr
+      if error
         throw "Error in composite (#{ filepath }): #{ error || stderr }"
 
       callback()
